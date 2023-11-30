@@ -408,6 +408,7 @@ const postImages =req.file.filename;
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 exports.getbanner=async(req,res)=>{
   try {
    

@@ -69,7 +69,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-const http = require('http');
+// const http = require('http');
 const https = require('https');
 const fs = require('fs');
 app.use(cors());
@@ -88,8 +88,8 @@ mongoose.connect(dbConfig.url, {
  
     const User = require('./app/models/adminlogin');
     const defaultUserData = {
-        email: 'couponcouzin@gmail.com',
-        password: '12345',
+        email: 'couponcouzin.com',
+        password: '123123',
     };
     User.findOne({ email: defaultUserData.email })
         .then(user => {
@@ -115,7 +115,7 @@ app.get('/', (req, res) => {
 });
 
 
-const httpServer = http.createServer(app);
+// const httpServer = http.createServer(app);
 
 
 const httpsOptions = {
@@ -127,10 +127,13 @@ const httpsOptions = {
 const httpsServer = https.createServer(httpsOptions, app);
 
 
-httpServer.listen(2022, () => {
-    console.log("HTTP Server is listening on port 2022");
-});
+// httpServer.listen(2022, () => {
+//     console.log("HTTP Server is listening on port 2022");
+// });
 
 httpsServer.listen(2023, () => {
     console.log("HTTPS Server is listening on port 2023");
 });
+
+// script in package.json
+// "test": "echo \"Error: no test specified\" && exit 1"

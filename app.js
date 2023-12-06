@@ -110,6 +110,9 @@ mongoose.connect(dbConfig.url, {
     process.exit(1);
 });
 
+// Serve static files from the 'blogs' directory
+// app.use('/blogs', express.static(path.join(__dirname, 'app/src/blogs')));
+
 app.get('/', (req, res) => {
     res.json({ "message": "Hello couponcouzin" });
 });
@@ -127,7 +130,7 @@ const httpsOptions = {
 const httpsServer = https.createServer(httpsOptions, app);
 
 
-// httpServer.listen(2022, () => {
+// httpServer.listen(2022, '192.168.0.158', () => {
 //     console.log("HTTP Server is listening on port 2022");
 // });
 

@@ -4,7 +4,9 @@ const userController =require('../controller/user');
 const router = express.Router();
 const {upload1} = require('../middleware/post');
 const {upload} = require('../middleware/website');
-const{upload3}=require('../middleware/banner');
+const{upload3} = require('../middleware/banner');
+const{upload4} = require('../middleware/blog');
+
 //admin
 router.post('/login',adminController.adminlogin);
 router.post('/post',upload1.array('postimage'),adminController.categorypost);
@@ -40,4 +42,20 @@ router.post('/couponbywebsite',userController.couponbywebsite)
 router.post('/search',userController.search);
 router.get('/stores',userController.stores)
 
-module.exports = router    
+
+//Edited by savesta
+
+//admin
+
+router.post('/write_blog', upload4.single('image') ,adminController.write_blog);
+router.get('/blogs', adminController.get_blogs);
+router.post('/blogs_by_type', adminController.blogs_by_type);
+router.get('/blog_by_id/:id', adminController.blog_by_id );
+router.delete('/delete_blog/:id', adminController.delete_blog);
+router.get('/search', adminController.search);
+router.post('/post_comment', adminController.postComment);
+router.get('/get_comments/:blogId', adminController.getComments);
+router.delete('/delete_comment/:id', adminController.deleteComment);
+
+
+module.exports = router;

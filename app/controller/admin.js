@@ -659,33 +659,67 @@ exports.delete_blog = async (req, res) => {
   }
 }
 
-//search for a blog
-  exports.search = async(req, res) => {
-    try {
-      const { title } = req.query;
-  
-      if (!title) {
-        return res.status(400).json({ Status: false, message: "Title not provided for search." });
-      }
-  
-      // Use a regular expression to perform a case-insensitive search
-      const regex = new RegExp(title, 'i');
-  
-      // Find blogs with titles that match the search query
-      const searchResults = await blogModel.find({ title: regex });
-  
-      res.status(200).json({
-        Status: true,
-        message: "Search successful.",
-        data: searchResults
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ Status: false, error: 'Internal Server Error' });
+exports.edit_blog = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ Status: false, message: "Provide blog id in the proper way." });
     }
-  }
 
-  
+    if (!req.file) {
+      return res.status(400).json({ Status: false, message: "Image file not provided." });
+    }
+
+    const { title, coupon, itemUrl, contents } = req.body;
+    const updatedBlogData = { title, coupon, itemUrl, contents };
+
+    const image = req.file.filename;
+
+    const blog = await blogModel.findByIdAndUpdate(
+      id,
+      { ...updatedBlogData, image },
+      { new: true }
+    );
+
+    if (!blog) {
+      return res.status(404).json({ Status: false, message: "Blog not found." });
+    }
+
+    return res.status(200).json({ Status: true, message: "Blog updated successfully!", data: blog });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ Status: false, message: error.message });
+  }
+};
+
+
+//search for a blog
+exports.search = async (req, res) => {
+  try {
+    const { title } = req.query;
+
+    if (!title) {
+      return res.status(400).json({ Status: false, message: "Title not provided for search." });
+    }
+
+    // Use a regular expression to perform a case-insensitive search
+    const regex = new RegExp(title, 'i');
+
+    // Find blogs with titles that match the search query
+    const searchResults = await blogModel.find({ title: regex });
+
+    res.status(200).json({
+      Status: true,
+      message: "Search successful.",
+      data: searchResults
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Status: false, error: 'Internal Server Error' });
+  }
+}
+
+
 
 // Post a comment
 exports.postComment = async (req, res) => {
@@ -746,6 +780,27 @@ exports.getComments = async (req, res) => {
     res.status(500).json({ Status: false, message: error.message });
   }
 };
+
+// Get comments by commentId
+exports.getCommentsById = async (req, res) => {
+  try {
+    const { commentId } = req.body;
+    const trimmedCommentId = commentId.trim();
+
+    const comments = await commentModel.findById(trimmedCommentId);
+
+    if (!comments) {
+      return res.status(404).json({ Status: false, message: "Comments not found for the given commentId" });
+    }
+
+    res.status(200).json({ Status: true, message: 'Success!', data: comments });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ Status: false, message: 'Internal server error' });
+  }
+};
+
+
 
 // Delete a comment
 exports.deleteComment = async (req, res) => {

@@ -52,9 +52,11 @@ router.get('/blogs', adminController.get_blogs);
 router.post('/blogs_by_type', adminController.blogs_by_type);
 router.get('/blog_by_id/:id', adminController.blog_by_id );
 router.delete('/delete_blog/:id', adminController.delete_blog);
+router.put('/edit_blog/:id', upload4.single('image'), adminController.edit_blog);
 router.get('/search', adminController.search);
 router.post('/post_comment', adminController.postComment);
 router.get('/get_comments/:blogId', adminController.getComments);
+router.post('/comments_by_id', adminController.getCommentsById);
 router.delete('/delete_comment/:id', adminController.deleteComment);
 
 

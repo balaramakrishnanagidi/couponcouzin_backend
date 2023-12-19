@@ -134,8 +134,8 @@ const httpsServer = https.createServer(httpsOptions, app);
 //     console.log("HTTP Server is listening on port 2022");
 // });
 
-httpsServer.listen(2023, () => {
-    console.log("HTTPS Server is listening on port 2023");
+httpsServer.listen(2023, '192.168.0.158',() => {
+    console.log("HTTPS Server is up and listening on the host 192.168.0.158 in port 2023");
 });
 
 // script in package.json

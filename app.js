@@ -66,7 +66,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
+const dbConfig = require('./config/database.config.js');
+const mongoose = require('mongoose');
 
+//middleware setup
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // const http = require('http');
@@ -74,11 +77,10 @@ const https = require('https');
 const fs = require('fs');
 app.use(cors());
 
+//Routes
 app.use('/', UserRoute);
 
-const dbConfig = require('./config/database.config.js');
-const mongoose = require('mongoose');
-
+//connect to the database
 mongoose.connect(dbConfig.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -89,8 +91,9 @@ mongoose.connect(dbConfig.url, {
     const User = require('./app/models/adminlogin');
     const defaultUserData = {
         email: 'couponcouzin.com',
-        password: '123123',
+        password: '121212',
     };
+
     User.findOne({ email: defaultUserData.email })
         .then(user => {
             if (!user) {
@@ -113,14 +116,21 @@ mongoose.connect(dbConfig.url, {
 // Serve static files from the 'blogs' directory
 // app.use('/blogs', express.static(path.join(__dirname, 'app/src/blogs')));
 
+//Serve static files from the 'pulic' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve sitemap.xml
+app.get('/sitemap.xml', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'sitemap.xml'));
+});
+
+//Default route
 app.get('/', (req, res) => {
     res.json({ "message": "Hello couponcouzin" });
 });
 
-
+//https server setup
 // const httpServer = http.createServer(app);
-
-
 const httpsOptions = {
     key: fs.readFileSync('couponcouzin.com.key'),
     cert: fs.readFileSync('b64d6007ddd45bdf.crt'),

@@ -271,12 +271,44 @@ exports.deleteWebsiteById = async (req, res) => {
   }
 }
 
+// exports.newproductcount = async (req, res) => {
+//   try {
+
+//     const now = new Date();
+//     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+//     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+//     const count = await category.countDocuments({
+//       couponstatus: 'false',
+//       createdAt: {
+//         $gte: todayStart,
+//         $lt: todayEnd
+//       }
+//     });
+//     res.json({ Status: true, count: count });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+
 exports.newproductcount = async (req, res) => {
   try {
-
     const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000); // Subtract 1 hour from the current time
+
+    // Set the start time to one hour ago
+    const todayStart = new Date(
+      oneHourAgo.getFullYear(),
+      oneHourAgo.getMonth(),
+      oneHourAgo.getDate(),
+      oneHourAgo.getHours(),
+      oneHourAgo.getMinutes(),
+      oneHourAgo.getSeconds()
+    );
+
+    // Set the end time to the current time
+    const todayEnd = now;
+
     const count = await category.countDocuments({
       couponstatus: 'false',
       createdAt: {
@@ -284,17 +316,51 @@ exports.newproductcount = async (req, res) => {
         $lt: todayEnd
       }
     });
+
     res.json({ Status: true, count: count });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// exports.newcouponcount = async (req, res) => {
+//   try {
+
+//     const now = new Date();
+//     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+//     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+//     const count = await category.countDocuments({
+//       couponstatus: 'true',
+//       createdAt: {
+//         $gte: todayStart,
+//         $lt: todayEnd
+//       }
+//     });
+//     res.json({ Status: true, count: count });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 exports.newcouponcount = async (req, res) => {
   try {
-
     const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000); // Subtract 1 hour from the current time
+
+    // Set the start time to one hour ago
+    const todayStart = new Date(
+      oneHourAgo.getFullYear(),
+      oneHourAgo.getMonth(),
+      oneHourAgo.getDate(),
+      oneHourAgo.getHours(),
+      oneHourAgo.getMinutes(),
+      oneHourAgo.getSeconds()
+    );
+
+    // Set the end time to the current time
+    const todayEnd = now;
+
     const count = await category.countDocuments({
       couponstatus: 'true',
       createdAt: {
@@ -302,11 +368,15 @@ exports.newcouponcount = async (req, res) => {
         $lt: todayEnd
       }
     });
+
     res.json({ Status: true, count: count });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+
 exports.totalproducts = async (req, res) => {
   try {
     const user = await category.count({ couponstatus: 'false' })

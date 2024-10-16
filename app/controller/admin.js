@@ -24,11 +24,11 @@ exports.adminlogin = async (req, res) => {
 
 exports.categorypost = async (req, res) => {
   try {
-    if (!req.body.Name || !req.body.maincategory || !req.body.price || !req.body.categorys || !req.body.company || !req.body.discount || !req.body.urlpath || !req.body.status) {
+    if (!req.body.Name || !req.body.maincategory || !req.body.price || !req.body.categorys || !req.body.company || !req.body.discount || !req.body.urlpath || !req.body.status || !req.body.metaTitle || !req.body.metaDescription || !req.body.primaryKeyword || !req.body.secondaryKeyword) {
       return res.status(400).json({ Status: false, message: "All fields are required" });
     }
 
-    const { Name, price, categorys, company, discount, urlpath, status, maincategory } = req.body;
+    const { Name, price, categorys, company, discount, urlpath, status, maincategory, metaTitle, metaDescription, primaryKeyword, secondaryKeyword } = req.body;
 
     const postImages = req.files.map((file) => file.filename);
 
@@ -38,7 +38,14 @@ exports.categorypost = async (req, res) => {
       price,
       categorys,
       company,
-      discount, urlpath, status, maincategory
+      discount,
+      urlpath,
+      status,
+      maincategory,
+      metaTitle,
+      metaDescription,
+      primaryKeyword,
+      secondaryKeyword,
     });
 
     const data = await categoryPost.save();
@@ -393,6 +400,7 @@ exports.totalwebsites = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 }
+
 exports.totalcoupons = async (req, res) => {
   try {
     const user = await category.count({ couponstatus: true })
@@ -401,23 +409,33 @@ exports.totalcoupons = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 }
+
 exports.couponpost = async (req, res) => {
   try {
-    if (!req.body.Name || !req.body.maincategory || !req.body.couponcode || !req.body.categorys || !req.body.company || !req.body.description || !req.body.urlpath || !req.body.status) {
+    if (!req.body.Name || !req.body.maincategory || !req.body.couponcode || !req.body.categorys || !req.body.company || !req.body.description || !req.body.urlpath || !req.body.status || !req.body.metaTitle || !req.body.metaDescription || !req.body.primaryKeyword || !req.body.secondaryKeyword) {
       return res.status(400).json({ Status: false, message: "All fields are required" });
     }
-    const { Name, categorys, company, couponcode, description, urlpath, status, maincategory } = req.body;
+
+    const { Name, categorys, company, couponcode, description, urlpath, status, maincategory, metaTitle, metaDescription, primaryKeyword, secondaryKeyword } = req.body;
+
     const categoryPost = new category({
       Name,
-
       couponcode,
       categorys,
       company,
-      description, urlpath, status, maincategory,
+      description,
+      urlpath,
+      status,
+      maincategory,
+      metaTitle,
+      metaDescription,
+      primaryKeyword,
+      secondaryKeyword,
       couponstatus: 'true',
     });
 
     const data = await categoryPost.save();
+
     res.status(201).json({
       Status: true,
       message: "Post created successfully!!",
@@ -428,7 +446,6 @@ exports.couponpost = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 
 exports.getAllcoupons = async (req, res) => {
   try {
@@ -628,7 +645,7 @@ const commentModel = require('../models/comment');
 
 exports.write_blog = async (req, res) => {
   try {
-    const { title, coupon, itemUrl, contents } = req.body;
+    const { title, coupon, itemUrl, contents, metaTitle, metaDescription, primaryKeyword, secondaryKeyword } = req.body;
 
     if (!req.file) {
       return res.status(400).json({ Status: false, message: "Image file not provided." });
@@ -649,7 +666,11 @@ exports.write_blog = async (req, res) => {
       coupon: coupon,
       itemUrl: itemUrl,
       contents: JSON.parse(contents),
-      image: image
+      image: image,
+      metaTitle: metaTitle,
+      metaDescription: metaDescription,
+      primaryKeyword: primaryKeyword,
+      secondaryKeyword: secondaryKeyword
     });
 
     const savedBlog = await newBlog.save();
@@ -736,18 +757,34 @@ exports.edit_blog = async (req, res) => {
       return res.status(400).json({ Status: false, message: "Provide blog id in the proper way." });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ Status: false, message: "Image file not provided." });
+    const { title, coupon, itemUrl, contents, metaTitle, metaDescription, primaryKeyword, secondaryKeyword } = req.body;
+
+    // Check if a new image is uploaded
+    let image;
+    if (req.file) {
+      image = req.file.filename;
     }
 
-    const { title, coupon, itemUrl, contents } = req.body;
-    const updatedBlogData = { title, coupon, itemUrl, contents };
+    const updatedBlogData = {
+      title,
+      coupon,
+      itemUrl,
+      contents: JSON.parse(contents), // parsing contents again if coming from form-data
+      metaTitle,
+      metaDescription,
+      primaryKeyword,
+      secondaryKeyword
+    };
 
-    const image = req.file.filename;
+    // Add image to update data if available
+    if (image) {
+      updatedBlogData.image = image;
+    }
 
+    // Find and update the blog by id
     const blog = await blogModel.findByIdAndUpdate(
       id,
-      { ...updatedBlogData, image },
+      updatedBlogData,
       { new: true }
     );
 
@@ -761,6 +798,7 @@ exports.edit_blog = async (req, res) => {
     return res.status(500).json({ Status: false, message: error.message });
   }
 };
+
 
 
 //search for a blog

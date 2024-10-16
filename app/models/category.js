@@ -8,11 +8,11 @@ const schema = new mongoose.Schema({
   price: {
     type: String,
     default: '',
-   
+
   },
-  description:{
-    type:String,
-    default:'',
+  description: {
+    type: String,
+    default: '',
   },
   postimage: [
     {
@@ -24,12 +24,12 @@ const schema = new mongoose.Schema({
         return undefined; // Use undefined instead of an empty return
       },
     },],
-  couponcode:{
-    type:String,
-    default:'',
+  couponcode: {
+    type: String,
+    default: '',
   },
-  couponstatus:{
-    type:String,default:'false'
+  couponstatus: {
+    type: String, default: 'false'
   },
   categorys: {
     type: String,
@@ -41,7 +41,7 @@ const schema = new mongoose.Schema({
   },
   discount: {
     type: String,
-    
+
   },
   urlpath: {
     type: String,
@@ -49,13 +49,30 @@ const schema = new mongoose.Schema({
   },
   status: {
     type: String,
-     required:true,
+    required: true,
   },
-  maincategory:{
-    type:String,required:true
-  }
+  maincategory: {
+    type: String,
+    required: true
+  },
+  metaTitle: {
+    type: String,
+    required: true,
+  },
+  metaDescription: {
+    type: String,
+    required: true,
+  },
+  primaryKeyword: {
+    type: String,
+    required: true,
+  },
+  secondaryKeyword: {
+    type: String,
+    required: true,
+  },
 }, {
-  timestamps: true, 
+  timestamps: true,
 });
 
 const category = mongoose.model('category', schema);

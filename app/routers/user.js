@@ -12,7 +12,7 @@ router.post('/login',adminController.adminlogin);
 router.post('/post',upload1.array('postimage'),adminController.categorypost);
 router.put('/postupdate/:postId',upload1.array('postimage'),adminController.updateCategoryPost);
 router.post('/getallcategories',adminController.getAllCategories);
-router.get('/allproducts',adminController.getAllproducts)
+router.get('/allproducts',adminController.getAllproducts);
 router.delete('/deletepost/:postId',adminController.deleteCategoryPost);
 router.post('/addwebsite',upload.single('image'),adminController.addwebsite)
 router.get('/getallwebsites',adminController.getallwebsites);
@@ -35,12 +35,12 @@ router.post('/getcompanycoupon',userController.coupon_by_company);
 router.get('/allcoupon',userController.allcoupon);
 router.get('/alluserproducts',userController.allproducts);
 router.get('/flashdeals',userController.flashdeals);
-router.get('/topdeals',userController.topdeals)
-router.post('/couponcompany',userController.couponcompany)
-router.post('/couponsubcategory',userController.couponsubcategory)
-router.post('/couponbywebsite',userController.couponbywebsite)
+router.get('/topdeals',userController.topdeals);
+router.post('/couponcompany',userController.couponcompany);
+router.post('/couponsubcategory',userController.couponsubcategory);
+router.post('/couponbywebsite',userController.couponbywebsite);
 router.post('/search',userController.search);
-router.get('/stores',userController.stores)
+router.get('/stores',userController.stores);
 
 
 //Edited by savesta
